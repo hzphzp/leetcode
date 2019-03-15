@@ -37,8 +37,11 @@
 # 
 # 
 #
+
+
 class Solution:
     def findMedianSortedArrays(self, nums1, nums2):
+        # 这种防越界的技巧要掌握
         nums1.insert(0, float("-inf"))
         nums1.append(float("inf"))
         nums2.insert(0, float("-inf"))
@@ -48,36 +51,15 @@ class Solution:
         counts = len(nums1) + len(nums2)
         even = (counts % 2 == 0)
         half = int(counts / 2) if even else int(counts / 2)   # 至少half个在在前面 3个-》1个在前面 4个-》 2个在其那面（大的那个）
-        while i < len(nums1) and j < len(nums2) and i + j < half:
+        while i + j < half:
             if nums1[i] > nums2[j]:
                 pre = nums2[j]
                 j += 1
             else:
                 pre = nums1[i]
                 i += 1
-        if even:
-            if i >= len(nums1):
-                pre = max(nums1[-1], nums2[half - len(nums1) - 1])
-                tail = nums2[half - len(nums1)]
-                return 0.5 * (pre + tail)
-            elif j >= len(nums2):
-                pre = max(nums2[-1], nums1[half - len(nums1) - 1])
-                tail = nums1[half - len(nums2)]
-                return 0.5 * (pre + tail)
-            elif i + j >= half:
-                return 0.5 * (min(nums1[i], nums2[j]) + pre)
-        else:
-            if i >= len(nums1):
-                tail = nums2[half - len(nums1)]
-                return tail
-            elif j >= len(nums2):
-                tail = nums1[half - len(nums2)]
-                return tail
-            elif i + j >= half:
-                return min(nums1[i], nums2[j])
+        return 0.5 * (min(nums1[i], nums2[j]) + pre) if even else min(nums1[i], nums2[j])
  
-
-
 
 if __name__ == "__main__":
     solution = Solution()
